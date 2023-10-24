@@ -4,11 +4,9 @@ import { Form, Input, Button, Checkbox, notification } from 'antd';
 import picture from '../public/pictures/bc.jpg';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import io from 'socket.io-client';
-import { httpHost, wsHOST } from '../network';
+import { httpHost } from '../network';
 
 const Home: NextPage = () => {
-  const socket = io(wsHOST);
   const router = useRouter();
   interface FormData {
     username: string; //用户名
@@ -36,10 +34,7 @@ const Home: NextPage = () => {
   }
 
   async function login(values: FormData) {
-    console.log(values);
-
     const { data: res } = await axios.post(`${httpHost}auth/login`, values);
-    console.log(res);
 
     if (res === undefined) {
       notification.error({
@@ -55,9 +50,6 @@ const Home: NextPage = () => {
         description: '您已经成功登录',
         duration: 2,
       });
-
-      // 登录完成后自动加入以自己名字命名的房间（好像有些不合理再改）
-      socket.emit('joinRoom', socket.id, values.username);
 
       // 把获取到的 token 和 username 存到本地
       localStorage.setItem('token', res.access_token);
