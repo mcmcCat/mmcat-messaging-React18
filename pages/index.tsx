@@ -1,7 +1,6 @@
 import type { NextPage } from 'next';
 import styled from 'styled-components';
 import { Form, Input, Button, Checkbox, notification } from 'antd';
-import picture from '../public/pictures/bc.jpg';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { httpHost } from '../network';
@@ -88,7 +87,6 @@ const Home: NextPage = () => {
 
   return (
     <Container>
-      {/* <img className="background" src={picture.src} alt="" /> */}
       <Form
         name="basic"
         labelCol={{ span: 8 }}
