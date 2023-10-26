@@ -7,6 +7,7 @@ import { httpHost } from '../network';
 import { Avatar } from 'antd';
 
 export default function UserList({
+  userListSSR = [],
   inRoom = false,
   RoomUsers = [''],
   currentUser = '', // currentUser 相当于 当前聊天对象
@@ -15,6 +16,8 @@ export default function UserList({
   setRoomMessages = new Function(),
   setIsloading = new Function(),
 }) {
+  console.log('UserLsit被渲染',Date.now());
+
   const value: string = useSelector((store: any) => store.username.value);
   const [Users, setUsers] = useState([
     {
@@ -22,6 +25,7 @@ export default function UserList({
       avatar: '',
     },
   ]);
+
   async function setCurrentChater(user: any) {
     console.log(`选择了 ${user} 与您进行聊天`);
     setTimeout(() => {
@@ -65,16 +69,20 @@ export default function UserList({
     }
   }, [currentUser]);
 
-  async function getUserList() {
-    try {
-      const { data: res } = await axios.get(`${httpHost}user/all`);
-      setUsers(res);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // async function getUserList() {
+  //   try {
+  //     const { data: res } = await axios.get(`${httpHost}user/all`);
+  //     setUsers(res);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+  // useEffect(() => {
+  //   getUserList();
+  // }, []);
   useEffect(() => {
-    getUserList();
+    console.log(userListSSR);
+    setUsers(userListSSR);
   }, []);
 
   useEffect(() => {

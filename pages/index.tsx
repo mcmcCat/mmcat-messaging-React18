@@ -57,7 +57,12 @@ const Home: NextPage = () => {
 
       //没设置头像不给聊天，强制去设置头像，不过头像是注册时去生成随机头像了，一般不会没有头像
       if (ishasAvatar.data) {
-        router.push('/chat');
+        router.push({
+          pathname: '/chat',
+          query: {
+            token: res.access_token,
+          },
+        });
       } else {
         router.push('/avatar');
       }

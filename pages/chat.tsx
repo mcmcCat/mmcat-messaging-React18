@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Button, Modal, Input, Form } from 'antd';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -10,7 +11,37 @@ import { routerBeforEach } from '../utils/router-beforEach';
 import { socket } from '../network/';
 import { formatTime } from '../utils/formatTime';
 
-export default function Chat() {
+export async function getServerSideProps(context: any) {
+  const { token } = context.query;
+
+  try {
+    const response = await fetch('http://localhost:3000/user/all', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const userListSSR = await response.json();
+    // 将获取到的数据作为 props 返回
+    return {
+      props: {
+        userListSSR,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+
+    // 如果发生错误，你也可以返回一个空数据对象
+    return {
+      props: {
+        userListSSR: [],
+      },
+    };
+  }
+}
+
+// export default function Chat({ userList }: { userList: any }) {
+export default function Chat({ userListSSR }: any) {
+  console.log('Chat被渲染', Date.now());
   const router = useRouter();
   const value = useSelector((store: any) => store.username.value);
   const dispatch = useDispatch();
@@ -87,6 +118,7 @@ export default function Chat() {
     routerBeforEach(router);
     dispatch(changeName(localStorage.getItem('username') as string));
   }, []);
+
   useEffect(() => {
     console.log('chat组件挂载');
     socket.on('connect', () => {
@@ -114,6 +146,7 @@ export default function Chat() {
       </Button>
       <ChatScreen>
         <UserList
+          userListSSR={userListSSR}
           currentUser={currentUser}
           setCurrentUser={setCurrentUser}
           setMessages={setMessages}
