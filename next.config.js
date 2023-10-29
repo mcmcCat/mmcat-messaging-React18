@@ -8,7 +8,7 @@ const nextConfig = {
     //   API_URL: 'https://api.example.com',
     //   API_KEY: 'your-api-key'
     // }
-    // 用 process.env.API_URL 来获取
+    // 用 process.env.API_URL  来获取
   },
 };
 
